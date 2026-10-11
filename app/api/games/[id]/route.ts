@@ -17,6 +17,8 @@ export async function PATCH(
 
   const existing = await getGameById(id);
   if (!existing) {
+  const game = await getGameById(id, await getSessionUserId());
+  if (!game) {
     return NextResponse.json({ error: "Game not found" }, { status: 404 });
   }
   if (existing.organizerId !== userId) {
