@@ -83,6 +83,15 @@ export const api = {
     request<Game[]>(`/api/games${toQueryString(filters)}`),
 
   createGame: (input: CreateGameInput): Promise<Game> =>
+      post<Game>("/api/games", input),
+
+  getGame: (id: string): Promise<Game> => request<Game>(`/api/games/${id}`),
+
+  updateGame: (id: string, input: CreateGameInput): Promise<Game> =>
+      request<Game>(`/api/games/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(input),
+      }),
     post<Game>("/api/games", input),
 
   // Both resolve to the updated game so the UI can refresh its count.
