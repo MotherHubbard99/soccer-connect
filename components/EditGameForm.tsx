@@ -118,7 +118,7 @@ export function EditGameForm({ game }: EditGameFormProps) {
                         aria-describedby="location-error"
                         className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                     />
-                    <p id="location-error" className="mt-1 text-sm text-red-600">
+                    <p id="location-error" className="mt-1 text-sm text-red-700 dark:text-red-400">
                         {errors.location}
                     </p>
                 </div>
@@ -140,7 +140,7 @@ export function EditGameForm({ game }: EditGameFormProps) {
                             aria-describedby="date-error"
                             className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                         />
-                        <p id="date-error" className="mt-1 text-sm text-red-600">
+                        <p id="date-error" className="mt-1 text-sm text-red-700 dark:text-red-400">
                             {errors.date}
                         </p>
                     </div>
@@ -161,7 +161,7 @@ export function EditGameForm({ game }: EditGameFormProps) {
                             aria-describedby="startTime-error"
                             className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                         />
-                        <p id="startTime-error" className="mt-1 text-sm text-red-600">
+                        <p id="startTime-error" className="mt-1 text-sm text-red-700 dark:text-red-400">
                             {errors.startTime}
                         </p>
                     </div>
@@ -184,7 +184,7 @@ export function EditGameForm({ game }: EditGameFormProps) {
                         aria-describedby="capacity-error"
                         className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                     />
-                    <p id="capacity-error" className="mt-1 text-sm text-red-600">
+                    <p id="capacity-error" className="mt-1 text-sm text-red-700 dark:text-red-400">
                         {errors.capacity}
                     </p>
                 </div>
@@ -209,7 +209,7 @@ export function EditGameForm({ game }: EditGameFormProps) {
                 <button
                     type="submit"
                     disabled={submitting || alreadyStarted}
-                    className="mt-2 rounded-md bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                    className="mt-2 rounded-md bg-emerald-700 px-4 py-2 font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
                 >
                     {submitting ? "Saving…" : "Save Changes"}
                 </button>

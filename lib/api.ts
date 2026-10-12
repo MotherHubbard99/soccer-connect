@@ -83,16 +83,19 @@ export const api = {
     request<Game[]>(`/api/games${toQueryString(filters)}`),
 
   createGame: (input: CreateGameInput): Promise<Game> =>
-      post<Game>("/api/games", input),
+    post<Game>("/api/games", input),
 
   getGame: (id: string): Promise<Game> => request<Game>(`/api/games/${id}`),
 
   updateGame: (id: string, input: CreateGameInput): Promise<Game> =>
-      request<Game>(`/api/games/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify(input),
-      }),
-    post<Game>("/api/games", input),
+    request<Game>(`/api/games/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(input),
+    }),
+
+  deleteGame: async (id: string): Promise<void> => {
+    await request<unknown>(`/api/games/${id}`, { method: "DELETE" });
+  },
 
   // Both resolve to the updated game so the UI can refresh its count.
   joinGame: (gameId: string): Promise<Game> =>
