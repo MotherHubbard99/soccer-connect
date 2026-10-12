@@ -1,54 +1,81 @@
-soccer-connect
+SoccerConnect
 
-Authors- Erick Flores, Angela Hubbard, and Trevor Bowers
+Find, organize, and join local pickup soccer games.
 
-The app will be a platform where soccer players create a profile so they can create join update and erase pickup soccer games.
+Live app: https://soccer-connect-6vz263odz-cse-340.vercel.app/ · Repository: https://github.com/tsbowers/soccer-connect
 
-Problem or Need: it is difficult to find other soccer players to make a pick up game. This program will make it easier to find people and games available. It will let them know the location and time and people going. They can also create a pick up game and invite other people.
+Team
+Erick Flores
+Angela Hubbard
+Trevor Bowers
+Alvaro Condoriand
+Problem and solution
 
-Core features: signup login profile and logout.
+Recreational players struggle to find others for a pickup game. SoccerConnect puts game details (location, date, time, and who is going) in one place. Players sign up, browse and filter open games, join or leave with one click, and organize their own games.
 
-Search games available
+Audience: recreational soccer players who want to find or run local pickup games.
 
-Create update and cancel pick up games
+Features
+Sign up, log in, log out, and edit your profile (display name, preferred position, bio)
+Browse games and filter by location, date, and time range
+Create, edit, and cancel (delete) your own games
+Join or leave a game, with live player counts and a full-game check
+Responsive layout, light and dark mode, form validation, and loading, error, and empty states
+Tech stack
 
-Join or leave a game
+Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Postgres via @vercel/postgres, bcrypt password hashing, HMAC-signed session cookies. Hosted on Vercel.
 
-Filter games by location date and time
+Authentication: custom email and password auth (not Auth.js or Clerk). Passwords are hashed with bcrypt and the session cookie is signed with SESSION_SECRET.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Getting started
 
-## Getting Started
+Requires Node 20+ and a Postgres database (for example Neon through the Vercel Marketplace).
 
-First, run the development server:
+bash
+npm install
+cp .env.example .env.local   # then fill in the two values below
+npm run dev                  # http://localhost:3000
+Variable	Purpose
+POSTGRES_URL	Postgres connection string
+SESSION_SECRET	Random string that signs session cookies (openssl rand -base64 32). Required in production.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Expected tables:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+users (id, name, email unique, password at least 60 characters wide for bcrypt hashes, preferred_position, bio)
+pickup_game (id, title, description, location, game_date, game_time, max_players, created_by → users.id, created_at)
+game_player (id, game_id → pickup_game.id, user_id → users.id, status, joined_at)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Scripts: npm run lint, npm run format, npm run format:check, npm run build.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Deployment (Vercel)
+Import the GitHub repo into Vercel.
+Add a Postgres database and confirm POSTGRES_URL is set.
+Add SESSION_SECRET under Project Settings → Environment Variables.
+Deploy. Every push to main redeploys automatically.
+Project structure
+app/            Pages (App Router) and API route handlers under app/api
+app/lib/        Database queries (db.ts, server/profile.ts)
+components/     Reusable UI (GameCard, GameDirectory, forms, SiteNav, ui.tsx)
+lib/            API client, session and password helpers, validation, types
 
-## Learn More
+The request cycle is: GameDirectory (client component) → api.listGames → GET /api/games → Postgres.
 
-To learn more about Next.js, take a look at the following resources:
+API reference
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+All bodies are JSON. Errors return { "error": "message" }.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Method	Route	Auth	Description
+POST	/api/auth/signup	–	Create an account (displayName, email, password of 8+ chars) and sign in
+POST	/api/auth/login	–	Sign in with email and password
+POST	/api/auth/logout	–	Clear the session
+GET	/api/auth/current	–	Current user, or null
+GET	/api/profile	–	Signed-in user's profile, or null
+PATCH	/api/profile	Required	Update displayName, preferredPosition, bio
+GET / PATCH / DELETE	/api/profile/[id]	Owner only	Read, update, or delete your own profile
+GET	/api/games	–	List games. Optional query: location, date (YYYY-MM-DD), timeFrom, timeTo (HH:MM)
+POST	/api/games	Required	Create a game (location, game_date, game_time, capacity of 2+, optional title, description)
+GET	/api/games/[id]	–	One game
+PATCH	/api/games/[id]	Organizer	Update a game
+DELETE	/api/games/[id]	Organizer	Delete (cancel) a game
+POST	/api/games/[id]/join	Required	Join a game (409 if full)
+DELETE	/api/games/[id]/join	Required	Leave a game
