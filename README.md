@@ -2,7 +2,7 @@
 
 Find, organize, and join local pickup soccer games.
 
-**Live app:** [ADD VERCEL URL] · **Repository:** https://github.com/tsbowers/soccer-connect
+**Live app:** https://soccer-connect-6vz263odz-cse-340.vercel.app/ · **Repository:** https://github.com/tsbowers/soccer-connect
 
 ## Team
 
@@ -37,8 +37,8 @@ Requires Node 20+ and a Postgres database (for example Neon through the Vercel M
 
 ```bash
 npm install
-cp .env.example .env.local   # then fill in the two values below
-npm run dev                  # http://localhost:3000
+cp .env.example .env.local # then fill in the two values below
+npm run dev # http://localhost:3000
 ```
 
 | Variable | Purpose |
@@ -64,10 +64,10 @@ Scripts: `npm run lint`, `npm run format`, `npm run format:check`, `npm run buil
 ## Project structure
 
 ```
-app/            Pages (App Router) and API route handlers under app/api
-app/lib/        Database queries (db.ts, server/profile.ts)
-components/     Reusable UI (GameCard, GameDirectory, forms, SiteNav, ui.tsx)
-lib/            API client, session and password helpers, validation, types
+app/ Pages (App Router) and API route handlers under app/api
+app/lib/ Database queries (db.ts, server/profile.ts)
+components/ Reusable UI (GameCard, GameDirectory, forms, SiteNav, ui.tsx)
+lib/ API client, session and password helpers, validation, types
 ```
 
 The request cycle is: `GameDirectory` (client component) → `api.listGames` → `GET /api/games` → Postgres.
@@ -95,10 +95,9 @@ All bodies are JSON. Errors return `{ "error": "message" }`.
 
 ## Known issues and opportunities
 
-- Migrate to Auth.js v5 for OAuth, password reset, and email verification.
-- **Passwords are stored in plain text.** The `users.password` column is varchar(30), which is too small for a hash, and the team can't alter the database. Widen the column to varchar(255) and hash with bcrypt or argon2 before real use.
+- **Auth doesn't meet the project spec.** Passwords are stored in plain text; there's no Auth.js v5 or Clerk integration. Tracked in [#53](https://github.com/tsbowers/soccer-connect/issues/53). The `users.password` column is varchar(30), but widening it is a normal migration (we've already run one for #30), not a blocker.
 - Lowering a game's capacity below its current player count is not blocked.
 - Game times are stored without a time zone.
-- Canceled games are deleted, so the `canceled` status is never shown.
+- There's no real "cancel a game" API yet — deleting a game removes it outright instead of marking it canceled, so the `canceled` status is never shown. Tracked in [#20](https://github.com/tsbowers/soccer-connect/issues/20).
 - Run `npm run format` once across the repo (some older files use different quote styles and line endings).
 - No automated tests yet.
