@@ -84,8 +84,28 @@ export const api = {
 
   createGame: (input: CreateGameInput): Promise<Game> =>
     post<Game>("/api/games", input),
+
   getGameAttendees: (id: string): Promise<Attendee[]> =>
     request<Attendee[]>(`/api/games/${id}/players`),
+
+  getGame: (id: string): Promise<Game> => request<Game>(`/api/games/${id}`),
+
+  updateGame: (id: string, input: CreateGameInput): Promise<Game> =>
+    request<Game>(`/api/games/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(input),
+    }),
+
+  deleteGame: async (id: string): Promise<void> => {
+    await request<unknown>(`/api/games/${id}`, { method: "DELETE" });
+  },
+
+  // Both resolve to the updated game so the UI can refresh its count.
+  joinGame: (gameId: string): Promise<Game> =>
+    post<Game>(`/api/games/${gameId}/join`),
+
+  leaveGame: (gameId: string): Promise<Game> =>
+    request<Game>(`/api/games/${gameId}/join`, { method: "DELETE" }),
 };
 
 export function errorMessage(error: unknown): string {

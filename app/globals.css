@@ -17,6 +17,10 @@
   --turf-text: #15803d; /* green-700 reads better on light bg */
   --accent: #22c55e; /* Accent Green */
   --danger: #dc2626; /* destructive actions (Cancel Game) */
+  /* Primary button: 5.0:1 white on green (AA). Dark mode flips to dark text. */
+  --btn: #15803d;
+  --btn-hover: #166534;
+  --on-btn: #ffffff;
 }
 
 @theme inline {
@@ -46,6 +50,9 @@
     --turf-dark: #16a34a;
     --turf-text: #6fcf9b;
     --accent: #4ade80;
+    --btn: #22c55e;
+    --btn-hover: #4ade80;
+    --on-btn: #0b1210;
   }
 }
 
@@ -88,8 +95,8 @@ h6 {
 @layer components {
   .btn-primary {
     display: inline-block;
-    background-color: var(--turf);
-    color: #ffffff;
+    background-color: var(--btn);
+    color: var(--on-btn);
     font-weight: 500;
     padding: 0.625rem 1.25rem;
     border-radius: 0.5rem;
@@ -97,7 +104,7 @@ h6 {
   }
 
   .btn-primary:hover {
-    background-color: var(--turf-dark);
+    background-color: var(--btn-hover);
   }
 
   /* Secondary button: needs a border so it never
