@@ -1,3 +1,4 @@
+import { DeleteGameButton } from "@/components/DeleteGameButton";
 import { EditGameForm } from "@/components/EditGameForm";
 import { getGameById } from "@/app/lib/db";
 import { getSessionUserId } from "@/lib/session";
@@ -35,7 +36,10 @@ export default async function EditGamePage({ params }: EditGamePageProps) {
             </p>
             <div className="mt-6">
                 {isOrganizer ? (
-                    <EditGameForm game={game} />
+                    <>
+                        <EditGameForm game={game} />
+                        <DeleteGameButton game={game} />
+                    </>
                 ) : (
                     <div
                         role="alert"

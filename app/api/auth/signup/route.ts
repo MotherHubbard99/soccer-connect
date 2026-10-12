@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
 import { sql } from "@vercel/postgres";
+import { NextResponse } from "next/server";
+
 import { dbUserToUser } from "@/lib/db-mappers";
 import { SESSION_COOKIE, setSessionCookie } from "@/lib/session";
 
@@ -14,6 +15,13 @@ export async function POST(request: Request) {
   if (!displayName || !email || !password) {
     return NextResponse.json(
       { error: "Display name, email, and password are required." },
+      { status: 400 },
+    );
+  }
+
+  if (password.length < 8) {
+    return NextResponse.json(
+      { error: "Password must be at least 8 characters." },
       { status: 400 },
     );
   }

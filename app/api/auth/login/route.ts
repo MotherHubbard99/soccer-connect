@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
 import { sql } from "@vercel/postgres";
+import { NextResponse } from "next/server";
+
 import { dbUserToUser } from "@/lib/db-mappers";
+import { verifyPassword } from "@/lib/password";
 import { SESSION_COOKIE, setSessionCookie } from "@/lib/session";
 
 export async function POST(request: Request) {
@@ -16,19 +18,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const result = await sql`
-    SELECT * FROM users
-    WHERE email = ${email} AND password = ${password};
-  `;
+  const result = await sql`SELECT * FROM users WHERE email = ${email};`;
+  const row = result.rows[0];
+  const stored = row ? String(row.password ?? "") : "";
 
-  if (result.rows.length === 0) {
+  if (!row || !verifyPassword(password, email, stored)) {
     return NextResponse.json(
       { error: "Email or password is incorrect." },
       { status: 401 },
     );
   }
 
-  const user = dbUserToUser(result.rows[0]);
+  const user = dbUserToUser(row);
   const response = NextResponse.json(user, { status: 200 });
   return setSessionCookie(response, SESSION_COOKIE, user.id);
 }
