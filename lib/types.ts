@@ -22,3 +22,10 @@ export interface CreateGameInput {
   capacity: number;
   description?: string;
 }
+
+export interface Attendee {
+  id: string;
+  name: string;
+  joinedAt: string; // ISO timestamp
+  status: string;
+}
