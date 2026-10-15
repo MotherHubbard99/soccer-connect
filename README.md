@@ -2,7 +2,7 @@
 
 Find, organize, and join local pickup soccer games.
 
-**Live app:** https://soccer-connect-6vz263odz-cse-340.vercel.app/ · **Repository:** https://github.com/tsbowers/soccer-connect
+**Live app:** https://soccer-connect-kohl.vercel.app/ · **Repository:** https://github.com/tsbowers/soccer-connect
 
 ## Team
 
